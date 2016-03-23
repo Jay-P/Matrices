@@ -1,11 +1,14 @@
+#ifndef CMatrice_h
+#define CMatrice_h
+
 template<typename tTypeElements> class CMatrice
 {
 
 private:
 
-	int iMATNbLignes;
-	int iMATNbColonnes;
-	tTypeElements pptMATElements;
+	int iMATnbLignes;
+	int iMATnbColonnes;
+	tTypeElements pptMATelements;
 
 public:
 	/**
@@ -20,7 +23,7 @@ public:
 * Post-condition :
 * ***********************
 */
-	void CMatrice();
+	CMatrice();
 	/**
 * ************************
 * Catrice
@@ -33,7 +36,7 @@ public:
 * Post-condition :
 * ***********************
 */
-	void CMatrice(int iColonnes,int iLignes, tTypeElements** pptMatrice);
+	CMatrice(int iColonnes,int iLignes, const tTypeElements** pptMatrice);
 	/**
 * ************************
 * CMatrice
@@ -46,7 +49,7 @@ public:
 * Post-condition :
 * ***********************
 */
-	void CMatrice(CMatrice MATparam);
+	CMatrice(const CMatrice<tTypeElements>&);
 	/**
 * ************************
 * MATretournerNbLignes
@@ -147,6 +150,86 @@ public:
 * Post-condition :
 * ***********************
 */
-	void ~CMatrice();
+	~CMatrice();
 
 };
+
+	template<typename tTypeElements>
+	CMatrice<tTypeElements>::CMatrice()
+	{
+		iMATnbLignes = 0;
+		iMATnbColonnes = 0;
+		pptMATelements = NULL;
+	}
+
+	template<typename tTypeElements>
+	CMatrice<tTypeElements>::CMatrice(int iColonnes, int iLignes, const tTypeElements** pptMatrice)
+	{
+		iMATnbLignes = iLignes;
+		iMATnbColonnes = iColonnes;
+		for(int iBoucleLignes=0;iBoucleLignes <= iLignes-1; iBoucleLignes++)
+		{
+			for(int iBoucleColonnes=0;iBoucleColonnes <= iColonnes-1; iBoucleColonnes++)
+				pptMATelements[iBoucleLignes][iBoucleColonnes]=pptMatrice[iBoucleLignes][iBoucleColonnes];
+		}
+	}
+
+	template<typename tTypeElements>
+	CMatrice<tTypeElements>::CMatrice(CMatrice MATParam&)
+	{
+		iMATnbLignes = MATparam.iMATnbLignes;
+		iMATnbColonnes = MATparam.iMATnbColonnes;
+		for(int iBoucleLignes=0;iBoucleLignes <= iLignes-1; iBoucleLignes++)
+		{
+			for(int iBoucleColonnes=0;iBoucleColonnes <= iColonnes-1; iBoucleColonnes++)
+				pptMATelements[iBoucleLignes][iBoucleColonnes]=MATparam.pptMatrice[iBoucleLignes][iBoucleColonnes];
+		}
+	}
+
+	template<typename tTypeElements>
+	int CMatrice<tTypeElements>::MATretournerNbLignes()
+	{
+		return iMATnbLignes;
+	}
+
+	template<typename tTypeElements>
+	void CMatrice<tTypeElements>::MATmodifierNbLignes(int iLignes)
+	{
+		iMATnbLignes=iLignes;
+	}
+
+	template<typename tTypeElements>
+	int CMatrice<tTypeElements>::MATretournerNbColonnes()
+	{
+		return iMATnbColonnes;	
+	}
+
+	template<typename tTypeElements>
+	void CMatrice<tTypeElements>::MATmodifierNbColonnes(int iColonnes)
+	{
+		iMATnbColonnes=iColonnes;
+	}
+
+	template<typename tTypeElements>
+	void CMatrice<tTypeElements>::MATafficherMatrice()
+	{
+	}
+
+	template<typename tTypeElements>
+	CMatrice<tTypeElements> operator*(const tTypeElements& MATparam) const 
+	{
+		CMatrice<tTypeElements> NewMatrice = 
+         return CMatrice<tTypeElements>(*this).operator*=(MATparam);
+      }
+
+	template<typename tTypeElements>
+	CMatrice<tTypeElements> operator/(const tTypeElements& MATparam) {
+        return CMatrice<tTypeElements>(*this).operator/=(MATparam);
+      }
+
+	template<typename tTypeElements>
+	CMatrice<tTypeElements> operator/(const tTypeElements& MATparam, double constante) 
+	{
+        return CMatrice<tTypeElements>(*this).operator/=(MATparam);
+      }
+#endif
