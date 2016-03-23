@@ -53,5 +53,9 @@ public:
 		iMATNbColonnes=iColonnes;
 	}
 
+	void MATafficherMatrice()
+	{
+	}
+
 	
 };
