@@ -8,7 +8,7 @@ private:
 
 	int iMATnbLignes;
 	int iMATnbColonnes;
-	tTypeElements pptMATelements;
+	tTypeElements** pptMATelements;
 
 public:
 	/**
@@ -216,20 +216,109 @@ public:
 	}
 
 	template<typename tTypeElements>
-	CMatrice<tTypeElements> operator*(const tTypeElements& MATparam) const 
-	{
-		CMatrice<tTypeElements> NewMatrice = 
-         return CMatrice<tTypeElements>(*this).operator*=(MATparam);
-      }
-
-	template<typename tTypeElements>
-	CMatrice<tTypeElements> operator/(const tTypeElements& MATparam) {
-        return CMatrice<tTypeElements>(*this).operator/=(MATparam);
+	CMatrice<tTypeElements> operator*(const tTypeElements& MATparam, double constante) const 
+	{	
+		inbLignes = MATparam.iMATnbLignes;
+		inbColonnes = MATparam.iMATnbColonnes;
+		tTypeElements newpptMatrice[inbLignes][inbColonnes];
+		for(int iBoucleLignes=0; iBoucleLignes<=MATparam.nbLignes;iBoucleLignes++)
+		{
+			for(int iBoucleColonnes=0; iBoucleColonnes<MATparam.nbColonnes;iBoucleColonnes++)
+			{
+				newpptMatrice[iBoucleLignes][iBoucleColonnes]= MATparam.pptMatrice[iBoucleLignes][iBoucleColonnes]*constante;
+			}
+		}
+		CMatrice<tTypeElements> NewMatrice = CMatrice(int inbColonnes, int inbLignes, const tTypeElements** newpptMatrice)
+         return NewMatrice;
       }
 
 	template<typename tTypeElements>
 	CMatrice<tTypeElements> operator/(const tTypeElements& MATparam, double constante) 
-	{
-        return CMatrice<tTypeElements>(*this).operator/=(MATparam);
+	{	
+		if(constante==0)
+			throw eExceptionDivisionByZero;
+		inbLignes = MATparam.iMATnbLignes;
+		inbColonnes = MATparam.iMATnbColonnes;
+		tTypeElements newpptMatrice[inbLignes][inbColonnes];
+		for(int iBoucleLignes=0; iBoucleLignes<=MATparam.nbLignes;iBoucleLignes++)
+		{
+			for(int iBoucleColonnes=0; iBoucleColonnes<MATparam.nbColonnes;iBoucleColonnes++)
+			{
+				newpptMatrice[iBoucleLignes][iBoucleColonnes]= MATparam.pptMatrice[iBoucleLignes][iBoucleColonnes]/constante;
+			}
+		}
+		CMatrice<tTypeElements> NewMatrice = CMatrice(int inbColonnes, int inbLignes, const tTypeElements** newpptMatrice)
+         return NewMatrice;
       }
+
+	template<typename tTypeElements>
+	CMatrice<tTypeElements> operator+(const tTypeElements& MATparam1, const tTypeElements& MATparam2)
+	{
+		if(MATparam1.iMATnbLignes != MATparam2.iMATnbLignes || MATparam1.iMATnbColonnes != MATparam2.iMATnbColonnes)
+			throw eExceptionDifferentSizes;
+		inbLignes = MATparam1.iMATnbLignes;
+		inbColonnes = MATparam1.iMATnbColonnes;
+		tTypeElements newpptMatrice[inbLignes][inbColonnes];
+		for(int iBoucleLignes=0; iBoucleLignes<=MATparam.nbLignes;iBoucleLignes++)
+		{
+			for(int iBoucleColonnes=0; iBoucleColonnes<MATparam.nbColonnes;iBoucleColonnes++)
+			{
+				newpptMatrice[iBoucleLignes][iBoucleColonnes]= MATparam1.pptMatrice[iBoucleLignes][iBoucleColonnes]+MATparam2.pptMatrice[iBoucleLignes][iBoucleColonnes];
+			}
+		}
+		CMatrice<tTypeElements> NewMatrice = CMatrice(int inbColonnes, int inbLignes, const tTypeElements** newpptMatrice);
+        return NewMatrice;
+	}
+
+	template<typename tTypeElements>
+	CMatrice<tTypeElements> operator-(const tTypeElements& MATparam1, const tTypeElements& MATparam2)
+	{
+		if(MATparam1.iMATnbLignes != MATparam2.iMATnbLignes || MATparam1.iMATnbColonnes != MATparam2.iMATnbColonnes)
+			throw eExceptionDifferentSizes;
+		inbLignes = MATparam1.iMATnbLignes;
+		inbColonnes = MATparam1.iMATnbColonnes;
+		tTypeElements newpptMatrice[inbLignes][inbColonnes];
+		for(int iBoucleLignes=0; iBoucleLignes<=MATparam.nbLignes;iBoucleLignes++)
+		{
+			for(int iBoucleColonnes=0; iBoucleColonnes<MATparam.nbColonnes;iBoucleColonnes++)
+			{
+				newpptMatrice[iBoucleLignes][iBoucleColonnes]= MATparam1.pptMatrice[iBoucleLignes][iBoucleColonnes]-MATparam2.pptMatrice[iBoucleLignes][iBoucleColonnes];
+			}
+		}
+		CMatrice<tTypeElements> NewMatrice = CMatrice(int inbColonnes, int inbLignes, const tTypeElements** newpptMatrice);
+        return NewMatrice;
+	}
+
+	template<typename tTypeElements>
+	CMatrice<tTypeElements> operator*(const tTypeElements& MATparam1, const tTypeElements& MATparam2) 
+	{	
+		if(MATparam1.iMATnbColonnes!=MATparam2.iMATnbLignes)
+			throw eIncompatibleMatrices;
+		inbLignes = MATparam1.iMATnbLignes;
+		inbColonnes = MATparam1.iMATnbColonnes;
+		tTypeElements newpptMatrice[inbLignes][inbColonnes];
+		for(int iBoucleLignes=0; iBoucleLignes<=MATparam1.nbLignes;iBoucleLignes++)
+		{
+			for(int iBoucleColonnes=0; iBoucleColonnes<MATparam1.nbColonnes;iBoucleColonnes++)
+			{
+				newpptMatrice[iBoucleLignes][iBoucleColonnes]= MATparam1.pptMatrice[iBoucleLignes][iBoucleColonnes]*MATparam2.pptMatrice[iBoucleLignes][iBoucleColonnes];
+			}
+		}
+		CMatrice<tTypeElements> NewMatrice = CMatrice(int inbColonnes, int inbLignes, const tTypeElements** newpptMatrice)
+         return NewMatrice;
+      }
+	
+	template<typename tTypeElements>
+	CMatrice<tTypeElements> transpose(const tTypeElements& MATparam)
+	{
+		inbLignes = MATparam1.iMATnbLignes;
+		inbColonnes = MATparam1.iMATnbColonnes;
+		tTypeElements newpptMatrice[inbColonnes][inbLignes];
+		for(int iBoucleLignes=0; iBoucleLignes<=MATparam1.nbLignes;iBoucleLignes++)
+		{
+			for(int iBoucleColonnes=0; iBoucleColonnes<MATparam1.nbColonnes;iBoucleColonnes++)
+			{
+				newpptMatrice[iBoucleLignes][iBoucleColonnes]= MATparam1.pptMatrice[iBoucleColonnes][iBoucleLignes];
+		}
+	}
 #endif
