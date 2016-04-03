@@ -11,6 +11,11 @@ private:
 	tTypeElements** pptMATelements;
 
 public:
+
+	//Operateurs externes
+	friend CMatrice<tTypeElements> operator*(double constante,CMatrice<tTypeElements> Matparam);
+	friend CMatrice<tTypeElements> operator*(CMatrice<tTypeElements> Matparam,double constante);
+
 	/**
 * ************************
 * CMatrice

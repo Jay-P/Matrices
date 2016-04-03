@@ -43,12 +43,9 @@ CMatrice<tTypeElements>::CMatrice(CMatrice<tTypeElements>& MATparam)
 template<typename tTypeElements>
 CMatrice<tTypeElements>::~CMatrice()
 {
-	if(uiMATnbLignes!=3435973836)
-	{
-		for(unsigned int uiBoucle=0; uiBoucle<uiMATnbLignes;uiBoucle++)
+	for(unsigned int uiBoucle=0; uiBoucle<uiMATnbLignes;uiBoucle++)
 			delete(pptMATelements[uiBoucle]);
-		delete(pptMATelements);
-	}
+	delete(pptMATelements);
 	uiMATnbLignes=0;
 	uiMATnbColonnes=0;
 }
@@ -294,7 +291,59 @@ CMatrice<tTypeElements>::~CMatrice()
 				newpptMatrice[uiBoucleLignes][uiBoucleColonnes]= MATparam.pptMatrice[uiBoucleColonnes][uiBoucleLignes];
 			}
 		}
-		CMatrice<tTypeElements> transposee = CMatrice(int uinbColonnes, int uinbLignes, const tTypeElements** newpptMatrice);
+		CMatrice<tTypeElements> transposee = CMatrice(uinbColonnes, uinbLignes, newpptMatrice);
 		return *transposee;
+	}
+
+	template<typename tTypeElements>
+	CMatrice<tTypeElements> operator*(CMatrice<tTypeElements> MATparam, double constante)
+	{
+		//if(uiMATnbColonnes!=MATparam.MATretournerNbLignes())
+			//throw CException(eMatricesIncompatibles);
+		unsigned int uinbLignes = MATparam.MATretournerNbLignes();
+		unsigned int uinbColonnes = MATparam.MATretournerNbColonnes();
+		tTypeElements** newpptMatrice = new tTypeElements*[uinbLignes];
+		for(unsigned int uiBoucle = 0; uiBoucle < uinbLignes; ++uiBoucle)
+		{
+			newpptMatrice[uiBoucle] = new tTypeElements[uinbColonnes];
+		}
+		for(unsigned int uiBoucleLignes=0; uiBoucleLignes<uinbLignes;uiBoucleLignes++)
+		{
+			for(unsigned int uiBoucleColonnes=0; uiBoucleColonnes<uinbColonnes;uiBoucleColonnes++)
+			{
+				newpptMatrice[uiBoucleLignes][uiBoucleColonnes]= constante*MATparam.MATretournerpptelements(uiBoucleLignes,uiBoucleColonnes);
+			}
+		}
+		CMatrice<tTypeElements> NewMatrice = CMatrice<tTypeElements>(uinbColonnes, uinbLignes, newpptMatrice);
+		for(unsigned int uiBoucle=0; uiBoucle<uinbLignes;uiBoucle++)
+			delete(newpptMatrice[uiBoucle]);
+		delete(newpptMatrice);
+        return NewMatrice;
+	}
+
+	template<typename tTypeElements>
+	CMatrice<tTypeElements> operator*(double constante, CMatrice<tTypeElements> MATparam)
+	{
+		//if(uiMATnbColonnes!=MATparam.MATretournerNbLignes())
+			//throw CException(eMatricesIncompatibles);
+		unsigned int uinbLignes = MATparam.MATretournerNbLignes();
+		unsigned int uinbColonnes = MATparam.MATretournerNbColonnes();
+		tTypeElements** newpptMatrice = new tTypeElements*[uinbLignes];
+		for(unsigned int uiBoucle = 0; uiBoucle < uinbLignes; ++uiBoucle)
+		{
+			newpptMatrice[uiBoucle] = new tTypeElements[uinbColonnes];
+		}
+		for(unsigned int uiBoucleLignes=0; uiBoucleLignes<uinbLignes;uiBoucleLignes++)
+		{
+			for(unsigned int uiBoucleColonnes=0; uiBoucleColonnes<uinbColonnes;uiBoucleColonnes++)
+			{
+				newpptMatrice[uiBoucleLignes][uiBoucleColonnes]= constante*MATparam.MATretournerpptelements(uiBoucleLignes,uiBoucleColonnes);
+			}
+		}
+		CMatrice<tTypeElements> NewMatrice = CMatrice<tTypeElements>(uinbColonnes, uinbLignes, newpptMatrice);
+		for(unsigned int uiBoucle=0; uiBoucle<uinbLignes;uiBoucle++)
+			delete(newpptMatrice[uiBoucle]);
+		delete(newpptMatrice);
+        return NewMatrice;
 	}
 	
