@@ -26,12 +26,30 @@ CMatrice<tTypeElements>::CMatrice(unsigned int uiColonnes, unsigned int uiLignes
 template<typename tTypeElements>
 CMatrice<tTypeElements>::CMatrice(CMatrice<tTypeElements>& MATparam)
 {
-	CMatrice<tTypeElements>(MATparam.MATretournerNbColonnes(),MATparam.MATretournerNbLignes(),MATparam.MATretournerpptelementss());
+	uiMATnbLignes = MATparam.MATretournerNbLignes();
+	uiMATnbColonnes = MATparam.MATretournerNbColonnes();
+	pptMATelements = new tTypeElements*[uiMATnbLignes];
+	for(unsigned int uiBoucle = 0; uiBoucle < uiMATnbLignes; ++uiBoucle)
+	{
+		pptMATelements[uiBoucle] = new tTypeElements[uiMATnbColonnes];
+	}
+	for(unsigned int uiBoucleLignes=0;uiBoucleLignes < uiMATnbLignes; uiBoucleLignes++)	
+	{
+		for(unsigned int uiBoucleColonnes=0;uiBoucleColonnes < uiMATnbColonnes; uiBoucleColonnes++)
+			pptMATelements[uiBoucleLignes][uiBoucleColonnes]=MATparam.MATretournerpptelements(uiBoucleLignes,uiBoucleColonnes);
+	}
 }
 template<typename tTypeElements>
 CMatrice<tTypeElements>::~CMatrice()
 {
-
+	if(uiMATnbLignes!=3435973836)
+	{
+		for(unsigned int uiBoucle=0; uiBoucle<uiMATnbLignes;uiBoucle++)
+			delete(pptMATelements[uiBoucle]);
+		delete(pptMATelements);
+	}
+	uiMATnbLignes=0;
+	uiMATnbColonnes=0;
 }
 	template<typename tTypeElements>
 	unsigned int CMatrice<tTypeElements>::MATretournerNbLignes()
@@ -74,12 +92,6 @@ CMatrice<tTypeElements>::~CMatrice()
 	tTypeElements CMatrice<tTypeElements>::MATretournerpptelements(unsigned int uiLigne, unsigned int uiColonne)
 	{
 		return pptMATelements[uiLigne][uiColonne];
-	}
-
-	template<typename tTypeElements>
-	tTypeElements** CMatrice<tTypeElements>::MATretournerpptelementss()
-	{
-		return pptMATelements;
 	}
 
 	template<typename tTypeElements>
@@ -178,9 +190,9 @@ CMatrice<tTypeElements>::~CMatrice()
 			}
 		}
 		CMatrice<tTypeElements> NewMatrice = CMatrice(uinbColonnes, uinbLignes, newpptMatrice);
-		//for(unsigned int uiBoucle=0; uiBoucle<uinbLignes;uiBoucle++)
-			//delete(newpptMatrice[uiBoucle]);
-		//delete(newpptMatrice);
+		for(unsigned int uiBoucle=0; uiBoucle<uinbLignes;uiBoucle++)
+			delete(newpptMatrice[uiBoucle]);
+		delete(newpptMatrice);
         return NewMatrice;
       }
 
@@ -224,11 +236,13 @@ CMatrice<tTypeElements>::~CMatrice()
 				newpptMatrice[uiBoucleLignes][uiBoucleColonnes] = MATparam.MATretournerpptelements(uiBoucleLignes,uiBoucleColonnes);
 			}
 		}
-        CMatrice<tTypeElements> NewMatrice = CMatrice(uinbColonnes,uinbLignes,newpptMatrice);
-		for(unsigned int uiBoucle=0; uiBoucle<uinbLignes;uiBoucle++)
-			delete(newpptMatrice[uiBoucle]);
-		delete(newpptMatrice);
-		return NewMatrice;
+        MATmodifierNbColonnes(uinColonnes);
+		MATmodifierNbColonnes(uinColonnes);
+		MATmodifierMatrice(newpptMatrice);
+		//for(unsigned int uiBoucle=0; uiBoucle<uinbLignes;uiBoucle++)
+			//delete(newpptMatrice[uiBoucle]);
+		//delete(newpptMatrice);
+		return *this;
       }
 
 	template<typename tTypeElements>
@@ -247,3 +261,4 @@ CMatrice<tTypeElements>::~CMatrice()
 		CMatrice<tTypeElements> transposee = CMatrice(int uinbColonnes, int uinbLignes, const tTypeElements** newpptMatrice);
 		return *transposee;
 	}
+	

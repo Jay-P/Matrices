@@ -17,14 +17,16 @@ int main()
 	pptMatrice2[1][0]=1;
 	pptMatrice2[1][1]=5;
 	CMatrice<double> M1 = CMatrice<double>(2,2,pptMatrice);
-	//for(unsigned int uiBoucle=0; uiBoucle<2;uiBoucle++)
-			//delete(pptMatrice[uiBoucle]);
-	//delete(pptMatrice);
+	
 	CMatrice<double> M2 = CMatrice<double>(2,2,pptMatrice2);
-	//for(unsigned int uiBoucle=0; uiBoucle<2;uiBoucle++)
-			//delete(pptMatrice2[uiBoucle]);
-	//delete(pptMatrice2);
+	
 	CMatrice<double> M3 = M1*M2;
 	//return M3.MATretournerpptelements(0,0);
+	for(unsigned int uiBoucle=0; uiBoucle<2;uiBoucle++)
+			delete(pptMatrice[uiBoucle]);
+	delete(pptMatrice);
+	for(unsigned int uiBoucle=0; uiBoucle<2;uiBoucle++)
+			delete(pptMatrice2[uiBoucle]);
+	delete(pptMatrice2);
 	return 0;
 }

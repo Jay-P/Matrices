@@ -236,7 +236,6 @@ public:
 */
 	CMatrice<tTypeElements>& operator=(CMatrice<tTypeElements>& MATparam);
 
-	tTypeElements** MATretournerpptelementss();
 };
 
 #include "CMatrice.hpp"
