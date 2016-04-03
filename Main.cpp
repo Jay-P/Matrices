@@ -20,7 +20,8 @@ int main()
 	
 	CMatrice<double> M2 = CMatrice<double>(2,2,pptMatrice2);
 	
-	CMatrice<double> M3 = M1*M2;
+	CMatrice<double> M3 = M1/3;
+	M2 = M3;
 	//return M3.MATretournerpptelements(0,0);
 	for(unsigned int uiBoucle=0; uiBoucle<2;uiBoucle++)
 			delete(pptMatrice[uiBoucle]);

@@ -21,6 +21,7 @@ CMatrice<tTypeElements>::CMatrice(unsigned int uiColonnes, unsigned int uiLignes
 		for(unsigned int uiBoucleColonnes=0;uiBoucleColonnes < uiMATnbColonnes; uiBoucleColonnes++)
 			pptMATelements[uiBoucleLignes][uiBoucleColonnes]=pptMatparam[uiBoucleLignes][uiBoucleColonnes];
 	}
+
 }
 
 template<typename tTypeElements>
@@ -64,9 +65,13 @@ CMatrice<tTypeElements>::~CMatrice()
 		tTypeElements** newpptMatrice = new tTypeElements*[uiMATnbLignes];
 		for(unsigned int ui = 0; ui < uiMATnbLignes; ++ui)
 		{
-			newpptMatrice[ui] = new tTypeElements[uinbColonnes];
+			newpptMatrice[ui] = new tTypeElements[uiMATnbColonnes];
 		}
+		for(unsigned int uiBoucle=0; uiBoucle<uiMATnbLignes;uiBoucle++)
+			delete(pptMATelements[uiBoucle]);
+		delete(pptMATelements);
 		pptMATelements = newpptMatrice;
+		
 	}
 
 	template<typename tTypeElements>
@@ -84,8 +89,30 @@ CMatrice<tTypeElements>::~CMatrice()
 		{
 			newpptMatrice[ui] = new tTypeElements[uiMATnbColonnes];
 		}
+		for(unsigned int uiBoucle=0; uiBoucle<uiMATnbLignes;uiBoucle++)
+			delete(pptMATelements[uiBoucle]);
+		delete(pptMATelements);
 		pptMATelements = newpptMatrice;
+	}
 
+	template<typename tTypeElements>
+	void CMatrice<tTypeElements>::MATmodifierMatrice(unsigned int uinbLignes,unsigned int uinbColonnes,tTypeElements** pptMatrice)
+	{
+		tTypeElements** newpptMatrice = new tTypeElements*[uinbLignes];
+		for(unsigned int ui = 0; ui < uinbLignes; ++ui)
+		{
+			newpptMatrice[ui] = new tTypeElements[uinbColonnes];
+		}
+		for(unsigned int uiBoucleLignes=0; uiBoucleLignes<uinbLignes;uiBoucleLignes++)
+		{
+			for(unsigned int uiBoucleColonnes=0; uiBoucleColonnes<uinbColonnes;uiBoucleColonnes++)
+			{
+				pptMATelements[uiBoucleLignes][uiBoucleColonnes]= pptMatrice[uiBoucleLignes][uiBoucleColonnes];
+			}
+		}
+		for(unsigned int uiBoucle=0; uiBoucle<uinbLignes;uiBoucle++)
+			delete(newpptMatrice[uiBoucle]);
+		delete(newpptMatrice);
 	}
 
 	template<typename tTypeElements>
@@ -120,7 +147,10 @@ CMatrice<tTypeElements>::~CMatrice()
 				newpptMatrice[uiBoucleLignes][uiBoucleColonnes]= pptMATelements[uiBoucleLignes][uiBoucleColonnes]+MATparam.MATretournerpptelements(uiBoucleLignes,uiBoucleColonnes);
 			}
 		}
-		CMatrice<tTypeElements> NewMatrice = CMatrice<tTypeElements>(uinbColonnes,uinbLignes,newpptMatrice);
+		CMatrice<tTypeElements> NewMatrice = CMatrice(uinbColonnes, uinbLignes, newpptMatrice);
+		for(unsigned int uiBoucle=0; uiBoucle<uinbLignes;uiBoucle++)
+			delete(newpptMatrice[uiBoucle]);
+		delete(newpptMatrice);
         return NewMatrice;
 	}
 
@@ -145,7 +175,10 @@ CMatrice<tTypeElements>::~CMatrice()
 				newpptMatrice[uiBoucleLignes][uiBoucleColonnes]= pptMATelements[uiBoucleLignes][uiBoucleColonnes]-MATparam.MATretournerpptelements(uiBoucleLignes,uiBoucleColonnes);
 			}
 		}
-		CMatrice<tTypeElements> NewMatrice = CMatrice<tTypeElements>(uinbColonnes,uinbLignes,newpptMatrice);
+		CMatrice<tTypeElements> NewMatrice = CMatrice(uinbColonnes, uinbLignes, newpptMatrice);
+		for(unsigned int uiBoucle=0; uiBoucle<uinbLignes;uiBoucle++)
+			delete(newpptMatrice[uiBoucle]);
+		delete(newpptMatrice);
         return NewMatrice;
 	}
 
@@ -199,8 +232,8 @@ CMatrice<tTypeElements>::~CMatrice()
 	template<typename tTypeElements>
 	CMatrice<tTypeElements> CMatrice<tTypeElements>::operator/(double constante) 
 	{	
-		if(constante==0)
-			throw eExceptionDivisionByZero;
+		//if(constante==0)
+			//throw eExceptionDivisionByZero;
 		unsigned int uinbLignes = uiMATnbLignes;
 		unsigned int uinbColonnes = uiMATnbColonnes;
 		tTypeElements** newpptMatrice = new tTypeElements*[uinbLignes];
@@ -212,11 +245,14 @@ CMatrice<tTypeElements>::~CMatrice()
 		{
 			for(unsigned int uiBoucleColonnes=0; uiBoucleColonnes<uinbColonnes;uiBoucleColonnes++)
 			{
-				newpptMatrice[uiBoucleLignes][uiBoucleColonnes]= MATparam.pptMatrice[uiBoucleLignes][uiBoucleColonnes]/constante;
+				newpptMatrice[uiBoucleLignes][uiBoucleColonnes]= pptMATelements[uiBoucleLignes][uiBoucleColonnes]/constante;
 			}
 		}
 		CMatrice<tTypeElements> NewMatrice = CMatrice(uinbColonnes, uinbLignes, newpptMatrice);
-         return NewMatrice;
+		for(unsigned int uiBoucle=0; uiBoucle<uinbLignes;uiBoucle++)
+			delete(newpptMatrice[uiBoucle]);
+		delete(newpptMatrice);
+        return NewMatrice;
       }
 
 	template<typename tTypeElements>
@@ -236,12 +272,12 @@ CMatrice<tTypeElements>::~CMatrice()
 				newpptMatrice[uiBoucleLignes][uiBoucleColonnes] = MATparam.MATretournerpptelements(uiBoucleLignes,uiBoucleColonnes);
 			}
 		}
-        MATmodifierNbColonnes(uinColonnes);
-		MATmodifierNbColonnes(uinColonnes);
-		MATmodifierMatrice(newpptMatrice);
-		//for(unsigned int uiBoucle=0; uiBoucle<uinbLignes;uiBoucle++)
-			//delete(newpptMatrice[uiBoucle]);
-		//delete(newpptMatrice);
+        MATmodifierNbLignes(uinbLignes);
+		MATmodifierNbColonnes(uinbColonnes);
+		MATmodifierMatrice(uinbLignes,uinbColonnes,newpptMatrice);
+		for(unsigned int uiBoucle=0; uiBoucle<uinbLignes;uiBoucle++)
+			delete(newpptMatrice[uiBoucle]);
+		delete(newpptMatrice);
 		return *this;
       }
 

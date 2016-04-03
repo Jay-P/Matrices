@@ -124,7 +124,7 @@ public:
 * Post-condition :
 * ***********************
 */
-	void MATmodifierMatrice(unsigned int uiLigne, unsigned int uiColonnes, tTypeElements telement);
+	void MATmodifierMatrice(unsigned int uinbLignes,unsigned int uinbColonnes,tTypeElements** pptMatrice);
 	/**
 * ************************
 * MATafficherMatrice
