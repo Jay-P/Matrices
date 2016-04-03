@@ -279,20 +279,27 @@ CMatrice<tTypeElements>::~CMatrice()
       }
 
 	template<typename tTypeElements>
-	CMatrice<tTypeElements> transpose(const CMatrice<tTypeElements>& MATparam)
+	CMatrice<tTypeElements> transpose(CMatrice<tTypeElements>& MATparam)
 	{
-		unsigned int uinbLignes = MATparam.iMATnbLignes;
-		unsigned int uinbColonnes = MATparam.iMATnbColonnes;
-		tTypeElements newpptMatrice[uinbColonnes][uinbLignes];
-		for(unsigned int uiBoucleLignes=0; uiBoucleLignes<=MATparam.nbLignes;uiBoucleLignes++)
+		unsigned int uinbLignes = MATparam.MATretournerNbLignes();
+		unsigned int uinbColonnes = MATparam.MATretournerNbColonnes();
+		tTypeElements** newpptMatrice = new tTypeElements*[uinbLignes];
+		for(unsigned int ui = 0; ui < uinbLignes; ++ui)
 		{
-			for(unsigned int uiBoucleColonnes=0; uiBoucleColonnes<MATparam.nbColonnes;uiBoucleColonnes++)
+			newpptMatrice[ui] = new tTypeElements[uinbColonnes];
+		}
+		for(unsigned int uiBoucleLignes=0; uiBoucleLignes<uinbLignes;uiBoucleLignes++)
+		{
+			for(unsigned int uiBoucleColonnes=0; uiBoucleColonnes<uinbColonnes;uiBoucleColonnes++)
 			{
-				newpptMatrice[uiBoucleLignes][uiBoucleColonnes]= MATparam.pptMatrice[uiBoucleColonnes][uiBoucleLignes];
+				newpptMatrice[uiBoucleLignes][uiBoucleColonnes]= MATparam.MATretournerpptelements(uiBoucleColonnes,uiBoucleLignes);
 			}
 		}
-		CMatrice<tTypeElements> transposee = CMatrice(uinbColonnes, uinbLignes, newpptMatrice);
-		return *transposee;
+		CMatrice<tTypeElements> transposee = CMatrice<tTypeElements>(uinbColonnes, uinbLignes, newpptMatrice);
+		for(unsigned int uiBoucle=0; uiBoucle<uinbLignes;uiBoucle++)
+			delete(newpptMatrice[uiBoucle]);
+		delete(newpptMatrice);
+		return transposee;
 	}
 
 	template<typename tTypeElements>
